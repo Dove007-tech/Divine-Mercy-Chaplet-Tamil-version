@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>இறை இரக்கத்தின் ஜெபமாலை</title>
+    <style>
+        body { font-family: "Georgia", serif; background: linear-gradient(180deg, #0A0F24 0%, #111A3A 50%, #070B19 100%); color: #E3F2FD; margin: 0; padding: 15px; text-align: center; }
+        .container { width: 100%; max-width: 500px; margin: 0 auto; box-sizing: border-box; }
+        .panel, .card { background: rgba(255, 255, 255, 0.05); border: 2px solid #4FC3F7; border-radius: 20px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); backdrop-filter: blur(5px); }
+        .card { background: #FFFFFF; border-color: #E0E0E0; text-align: justify; }
+        .app-title { font-size: 20px; font-weight: 900; text-transform: uppercase; margin: 0 0 5px 0; color: #FFF; }
+        .score-row { display: flex; justify-content: space-around; font-family: sans-serif; font-weight: 800; font-size: 13px; color: #4FC3F7; }
+        .card-title { font-size: 14px; font-weight: 800; color: #B71C1C; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
+        .card-text { font-size: 14px; color: #212121; margin: 0; white-space: pre-line; font-weight: 500; }
+        .viewport { height: 220px; position: relative; margin-bottom: 12px; border-radius: 24px; overflow: hidden; background: #020617; border: 3px solid #FFD54F; display: flex; flex-direction: column; justify-content: space-between; padding: 12px; box-sizing: border-box; }
+        .mercy-ray { position: absolute; top: 0; bottom: 0; width: 45%; opacity: 0.25; filter: blur(20px); animation: wave 4s infinite ease-in-out; pointer-events: none; }
+        .ray-pale { left: 5%; background: linear-gradient(90deg, transparent, #E0F7FA 50%, transparent); }
+        .ray-red { right: 5%; background: linear-gradient(90deg, transparent, #FF8A80 50%, transparent); animation-delay: 2s; }
+        @keyframes wave { 0%, 100% { transform: scaleX(1) skewX(-5deg); } 50% { transform: scaleX(1.2) skewX(5deg); } }
+        .large-node { font-size: 36px; z-index: 10; cursor: pointer; }
+        .grid-10 { display: flex; justify-content: center; gap: 6px; width: 100%; z-index: 10; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 12px; box-sizing: border-box; }
+        .bead { font-size: 22px; width: 30px; height: 34px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .bloom { animation: roseBloom 0.4s ease-out forwards; }
+        @keyframes roseBloom { 0% { transform: scale(0.5); } 50% { transform: scale(1.3); } 100% { transform: scale(1); filter: drop-shadow(0 0 8px #FF5252); } }
+        .trust { font-family: sans-serif; font-weight: 900; font-size: 20px; text-transform: uppercase; margin: 5px 0 15px 0; color: #FF8A80; opacity: 0.4; transition: all 0.5s; }
+        .glow { opacity: 1; color: #FFFDE7; text-shadow: 0 0 12px #FFEB3B, 0 0 24px #FF5252; }
+        .btn { width: 100%; background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%); color: #FFF; border: 3px solid #FFF; padding: 15px; border-radius: 30px; font-size: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel">
+            <h1 class="app-title">இறை இரக்கத்தின் ஜெபமாலை</h1>
+            <div class="score-row">
+                <div id="b-lbl">மணி காட்டி: 1 / 56</div>
+                <div id="s-lbl">துவக்க ஜெபங்கள்</div>
+            </div>
+        </div>
+        <div class="card">
+            <div id="p-title" class="card-title">சிலுவை அடையாளம்</div>
+            <p id="p-text" class="card-text">தந்தை, மகன், தூய ஆவியாரின் பெயராலே. ஆமென்.</p>
+        </div>
+        <div class="viewport">
+            <div class="mercy-ray ray-pale"></div>
+            <div class="mercy-ray ray-red"></div>
+            <div style="display:flex; justify-content:center; width:100%;"><div id="l-node" class="large-node">🔴</div></div>
+            <div class="grid-10" id="matrix"></div>
+        </div>
+        <div id="t-node" class="trust">இயேசுவே, உம்மீது நம்பிக்கை வைக்கிறேன்!</div>
+        <button class="btn" id="act-btn" onclick="prayStep()">ஜெபிக்கத் தட்டவும் 🌹</button>
+    </div>
+    <script>
+        var step = 0; const MAX = 56;
+        var fText = "நித்திய பிதாவே, எங்களது பாவங்களுக்காகவும், அகில உலகத்தின் பாவங்களுக்காகவும் பரிகாரமாக, உமது அன்பு மகனும் எங்கள் ஆண்டவருமாகிய இயேசு கிறிஸ்துவின் திருவுடலையும் திருஇரத்தத்தையும் ஆன்மாவையும் தெய்வீகத்தையும் உமக்கு ஒப்புக்கொடுக்கிறேன்.";
+        var pText = "இயேசுவின் கொடூரமான பாடுகளின் வழியாக, எங்கள் மேலும் அகில உலகத்தின் மேலும் இரக்கமாயிரும்.";
+        var creedText = "விண்ணகத்தையும் மண்ணகத்தையும் படைத்த எல்லாம் வல்ல தந்தையாகிய இறைவனை நம்புகிறேன். அவருடைய ஒரே மகனாகிய நம் ஆண்டவர் இயேசு கிறிஸ்துவை நம்புகிறேன். இவர் தூய ஆவியாரால் கருவாகித் தூய கன்னி மரியாவிடமிருந்து பிறந்தார். பொந்தியு பிலாத்தின் அதிகாரத்தில் பாடுபட்டு, சிலுவையில் அறையப்பட்டு, இறந்து அடக்கம் செய்யப்பட்டார்; பாதாளத்தில் இறங்கி, மூன்றாம் நாள் இறந்தோரிடமிருந்து உயிர்த்தெழுந்தார்; விண்ணகத்திற்கு எழுந்து சென்று, எல்லாம் வல்ல தந்தையாகிய இறைவனின் வலப்பக்கத்தில் வீற்றிருக்கிறார்; அங்கிருந்து வாழ்வோருக்கும் இறந்தோருக்கும் தீர்ப்பு வழங்க மீண்டும் வருவார்.\n\nதூய ஆவியாரை நம்புகிறேன். தூய கத்தோலிக்கத் திருச்சபையை நம்புகிறேன். தூயவர்களின் உறவுப் பின்னைப்பை நம்புகிறேன். பாவ மன்னிப்பை நம்புகிறேன். உடலின் உயிர்த்தெழுதலை நம்புகிறேன். நிலை வாழ்வை நம்புகிறேன். ஆமென்.";
+
+        function getData(s) {
+            if (s === 0) return { b: "🔴", s: "துவக்க ஜெபங்கள்", t: "சிலுவை அடையாளம்", p: "தந்தை, மகன், தூய ஆவியாரின் பெயராலே. ஆமென்.", lg: true };
+            if (s === 1) return { b: "⚪", s: "துவக்க ஜெபங்கள்", t: "விண்ணuலகப் பிரார்த்தனை (பரலோக மந்திரம்)", p: "விண்ணுலகில் இருக்கிற எங்கள் தந்தையே, உமது பெயர் தூயதெனப் போற்றப்பறுக! உமது ஆட்சி வருக! உமது திருவுளம் விண்ணுலகில் நிறைவேறுவது போல மண்ணுலகிலும் நிறைவேறுக! எங்கள் அன்றாட உணவை இன்று எங்களுக்குத் தாரும். எங்களுக்கு எதிராகக் குற்றம் செய்வோரை நாங்கள் நாங்கள் மன்னிப்பது போல எங்கள் குற்றங்களை மன்னியும். எங்களைச் சோதனைக்கு உட்படுத்தாதேயும், தீயோனிடமிருந்து எங்களை விடுவித்தருளும். ஆமென்.", lg: true };
+            if (s === 2) return { b: "⚪", s: "துவக்க ஜெபங்கள்", t: "அருள்மறை வாழ்த்து (அருள்மிகப் பெற்றவரே)", p: "அருள்மிகப் பெற்ற மரியே வாழ்க! ஆண்டவர் உம்மோனே. பெண்களுள் ஆசி பெற்றவர் நீரே, உம்முடைய திருவயிற்றின் கனியாகிய இயேசுவும் ஆசி பெற்றவரே. தூய மரியே, இறைவனின் தாயே, பாவிகளாய் இருக்கிற எங்களுக்காக இப்பொழுதும் எங்கள் இறப்பின் வேளையிலும் வேண்டிக்கொள்ளும். ஆமென்.", lg: true };
+            if (s === 3) return { b: "⚪", s: "துவக்க ஜெபங்கள்", t: "அப்போஸ்தலர்களின் விசுவாசப் பிரமாணம்", p: creedText, lg: true };
+            if (s === 54) return { b: "👑", s: "முடிவு ஜெபங்கள்", t: "மூவொரு இறை ஜெபம்", p: "தூய இறைவா! தூய வல்லவரே! தூய அமரரே! எங்கள் மேலும் அகில உலகத்தின் மேலும் இரக்கமாயிரும். (3 முறை சொல்லவும்)", lg: true };
+            if (s === 55) return { b: "✨", s: "முடிவு ஜெபங்கள்", t: "நிறைவுப் பிரார்த்தனை", p: "ஓ நித்திய இறைவா, உமது இரக்கம் எல்லையற்றது, உமது கருணையின் கருவூலம் வற்றாதது! எங்களைக் கனிவோடு கண்ணோக்கி, உமது இரக்கத்தை எங்களுக்குள் அதிகரித்தருளும். ஆமென்.", lg: true };
+            var adj = s - 4; var dec = Math.floor(adj / 11) + 1; var rem = adj % 11;
+            if (rem === 0) return { b: "🔴", s: "பத்து " + dec, t: "நித்திய பிதாவே பிரார்த்தனை", p: fText, lg: true };
+            return { b: "⚪", s: "பத்து " + dec, t: "பாடுகளின் மணி " + rem, p: pText, lg: false };
+        }
+        function drawMatrix() {
+            var mx = document.getElementById('matrix'); mx.innerHTML = '';
+            var adj = step - 4; var rem = (step >= 4 && step < 54) ? (adj % 11) : -1;
+            for (var i = 1; i <= 10; i++) {
+                var cell = document.createElement('div'); cell.className = 'bead';
+                if (rem !== 0 && i <= rem && step >= 4 && step < 54) { cell.innerHTML = '🌹'; cell.className = 'bead bloom'; }
+                else { cell.innerHTML = '⚪'; }
+                mx.appendChild(cell);
+            }
+        }
+        function prayStep() {
+            if (step < MAX - 1) {
+                step++; var n = getData(step);
+                document.getElementById('b-lbl').innerText = "மணி காட்டி: " + (step + 1) + " / " + MAX;
+                document.getElementById('s-lbl').innerText = n.s;
+                document.getElementById('p-title').innerText = n.t;
+                document.getElementById('p-text').innerText = n.p;
+                document.getElementById('l-node').innerText = n.lg ? n.b : "✨";
+                drawMatrix();
+                var r = step / (MAX - 1); var t = document.getElementById('t-node');
+                if (r > 0.1) { t.className = "trust glow"; t.style.filter = "brightness(" + (0.7 + (r * 0.3)) + ")"; }
+                if (step === MAX - 1) {
+                    var b = document.getElementById('act-btn'); b.disabled = true; b.innerText = "ஜெபம் நிறைவுற்றது ✨"; b.style.background = "#2E7D32";
+                }
+            }
+        }
+        drawMatrix();
+    </script>
+</body>
+</html>
